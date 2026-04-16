@@ -3,43 +3,69 @@ require_once "config.php";
 
 header("Content-Type: application/json");
 
-$action = $_GET['action'] ?? '';
+// Read JSON input once
+$input = json_decode(file_get_contents("php://input"), true) ?? [];
 
-switch($action) {
-    case 'addMovie':
-        addMovie($conn);
-        break;
-    case 'getMovies':
-        getMovies($conn);
-        break;
-    case 'updateMovie':
-        updateMovie($conn);
-        break;
-    case 'deleteMovie':
-        deleteMovie($conn);
-        break;
-    default:
-        echo json_encode(["status"=>"error","message"=>"Invalid action"]);
+$method = $_SERVER['REQUEST_METHOD'];
+
+try {
+    switch ($method) {
+
+        case 'GET':
+            getMovies($conn);
+            break;
+
+        case 'POST':
+            addMovie($conn, $input);
+            break;
+
+        case 'PUT':
+            updateMovie($conn, $input);
+            break;
+
+        case 'DELETE':
+            deleteMovie($conn, $input);
+            break;
+
+        default:
+            response(false, null, "Method not allowed", 405);
+    }
+} catch (Exception $e) {
+    response(false, null, "Server error: " . $e->getMessage(), 500);
 }
 
-function addMovie($conn) {
-    $title = $_POST['title'] ?? '';
-    $genre = $_POST['genre'] ?? '';
-    $year = $_POST['release_year'] ?? null;
+function response($success, $data = null, $error = null, $code = 200) {
+    http_response_code($code);
 
-    if(empty($title)) {
-        echo json_encode(["status"=>"error","message"=>"Title required"]);
-        return;
+    echo json_encode([
+        "success" => $success,
+        "data" => $data,
+        "error" => $error
+    ]);
+
+    exit;
+}
+
+function addMovie($conn, $input) {
+    $title = trim($input['title'] ?? '');
+    $genre = trim($input['genre'] ?? '');
+    $year  = $input['release_year'] ?? null;
+
+    if ($title === '') {
+        response(false, null, "Title is required", 400);
     }
 
-    $stmt = $conn->prepare("INSERT INTO movies (title, genre, release_year) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare(
+        "INSERT INTO movies (title, genre, release_year) VALUES (?, ?, ?)"
+    );
+
     $stmt->bind_param("ssi", $title, $genre, $year);
 
-    if($stmt->execute()) {
-        echo json_encode(["status"=>"success"]);
-    } else {
-        echo json_encode(["status"=>"error","message"=>"Insert failed"]);
+    if ($stmt->execute()) {
+        response(true, ["id" => $stmt->insert_id], null, 201);
     }
+
+    response(false, null, "Insert failed", 500);
 }
 
 function getMovies($conn) {
@@ -51,35 +77,52 @@ function getMovies($conn) {
         $data[] = $row;
     }
 
-    echo json_encode([
-        "status"=>"success",
-        "data"=>$data
-    ]);
+    response(true, $data);
 }
 
-function updateMovie($conn) {
-    $id = $_POST['id'];
-    $title = $_POST['title'];
+function updateMovie($conn, $input) {
+    $id = $input['id'] ?? null;
+    $title = $input['title'] ?? null;
+
+    if (!$id) {
+        response(false, null, "ID is required", 400);
+    }
+
+    if (!$title) {
+        response(false, null, "Title is required", 400);
+    }
 
     $stmt = $conn->prepare("UPDATE movies SET title=? WHERE id=?");
     $stmt->bind_param("si", $title, $id);
 
-    if($stmt->execute()) {
-        echo json_encode(["status"=>"success"]);
-    } else {
-        echo json_encode(["status"=>"error"]);
+    if (!$stmt->execute()) {
+        response(false, null, "Update failed", 500);
     }
+
+    if ($stmt->affected_rows === 0) {
+        response(false, null, "Movie not found or no changes made", 404);
+    }
+
+    response(true, ["id" => $id], null, 200);
 }
 
-function deleteMovie($conn) {
-    $id = $_POST['id'];
+function deleteMovie($conn, $input) {
+    $id = $input['id'] ?? null;
+
+    if (!$id) {
+        response(false, null, "ID is required", 400);
+    }
 
     $stmt = $conn->prepare("DELETE FROM movies WHERE id=?");
     $stmt->bind_param("i", $id);
 
-    if($stmt->execute()) {
-        echo json_encode(["status"=>"success"]);
-    } else {
-        echo json_encode(["status"=>"error"]);
+    if ($stmt->execute()) {
+        if ($stmt->affected_rows === 0) {
+            response(false, null, "Movie not found", 404);
+        }
+
+        response(true, null);
     }
+
+    response(false, null, "Delete failed", 500);
 }
