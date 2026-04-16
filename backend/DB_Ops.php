@@ -22,3 +22,37 @@ switch($action) {
         echo json_encode(["status"=>"error","message"=>"Invalid action"]);
 }
 
+function addMovie($conn) {
+    $title = $_POST['title'] ?? '';
+    $genre = $_POST['genre'] ?? '';
+    $year = $_POST['release_year'] ?? null;
+
+    if(empty($title)) {
+        echo json_encode(["status"=>"error","message"=>"Title required"]);
+        return;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO movies (title, genre, release_year) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $title, $genre, $year);
+
+    if($stmt->execute()) {
+        echo json_encode(["status"=>"success"]);
+    } else {
+        echo json_encode(["status"=>"error","message"=>"Insert failed"]);
+    }
+}
+
+function getMovies($conn) {
+    $result = $conn->query("SELECT * FROM movies");
+
+    $data = [];
+
+    while($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    echo json_encode([
+        "status"=>"success",
+        "data"=>$data
+    ]);
+}
