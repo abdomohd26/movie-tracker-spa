@@ -1,0 +1,420 @@
+{
+  "info": {
+    "_postman_id": "230e1f5e-030f-4f71-acdd-2bc8354abb78",
+    "name": "Movie_Tracker",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40585335",
+    "_collection_link": "https://go.postman.co/collection/40585335-230e1f5e-030f-4f71-acdd-2bc8354abb78?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Add Movie",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"Inception\",\r\n  \"description\": \"A thief who steals corporate secrets through dream-sharing technology.\",\r\n  \"genre\": \"Sci-Fi\",\r\n  \"release_year\": 2010,\r\n  \"duration_minutes\": 148,\r\n  \"poster_path\": \"https://image.url/inception.jpg\",\r\n  \"trailer_url\": \"https://youtube.com/watch?v=YoHD9XEInc0\",\r\n  \"watched\": 1\r\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/DB_Ops.php?action=addMovie",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "DB_Ops.php"
+          ],
+          "query": [
+            {
+              "key": "action",
+              "value": "addMovie"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "success",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Inception\",\r\n  \"description\": \"A thief who steals corporate secrets through dream-sharing technology.\",\r\n  \"genre\": \"Sci-Fi\",\r\n  \"release_year\": 2010,\r\n  \"duration_minutes\": 148,\r\n  \"poster_path\": \"https://image.url/inception.jpg\",\r\n  \"trailer_url\": \"https://youtube.com/watch?v=YoHD9XEInc0\",\r\n  \"watched\": 1\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/DB_Ops.php?action=addMovie",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "DB_Ops.php"
+              ],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "addMovie"
+                }
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 20:54:58 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Content-Length",
+              "value": "413"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"success\": true,\n    \"status\": 201,\n    \"message\": \"Movie created\",\n    \"data\": {\n        \"id\": 1,\n        \"title\": \"Inception\",\n        \"description\": \"A thief who steals corporate secrets through dream-sharing technology.\",\n        \"genre\": \"Sci-Fi\",\n        \"release_year\": 2010,\n        \"duration_minutes\": 148,\n        \"watched\": 1,\n        \"poster_path\": \"https://image.url/inception.jpg\",\n        \"trailer_url\": \"https://youtube.com/watch?v=YoHD9XEInc0\",\n        \"created_at\": \"2026-04-17 22:54:58\",\n        \"updated_at\": null\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get All Movies",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{base_url}}/DB_Ops.php?action=getMovies",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "DB_Ops.php"
+          ],
+          "query": [
+            {
+              "key": "action",
+              "value": "getMovies"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/DB_Ops.php?action=getMovies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "DB_Ops.php"
+              ],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "getMovies"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 20:55:14 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Content-Length",
+              "value": "424"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"message\": \"Movies fetched\",\n    \"data\": [\n        {\n            \"id\": \"1\",\n            \"title\": \"Inception\",\n            \"description\": \"A thief who steals corporate secrets through dream-sharing technology.\",\n            \"genre\": \"Sci-Fi\",\n            \"release_year\": \"2010\",\n            \"duration_minutes\": \"148\",\n            \"watched\": \"1\",\n            \"poster_path\": \"https://image.url/inception.jpg\",\n            \"trailer_url\": \"https://youtube.com/watch?v=YoHD9XEInc0\",\n            \"created_at\": \"2026-04-17 22:54:58\",\n            \"updated_at\": null\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Update Movie",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"id\": 1,\r\n  \"title\": \"Inception Updated\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/DB_Ops.php?action=updateMovie",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "DB_Ops.php"
+          ],
+          "query": [
+            {
+              "key": "action",
+              "value": "updateMovie"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "success",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 1,\r\n  \"title\": \"Inception Updated\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/DB_Ops.php?action=updateMovie",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "DB_Ops.php"
+              ],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "updateMovie"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 20:55:29 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Content-Length",
+              "value": "438"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"message\": \"Movie updated\",\n    \"data\": {\n        \"id\": 1,\n        \"title\": \"Inception Updated\",\n        \"description\": \"A thief who steals corporate secrets through dream-sharing technology.\",\n        \"genre\": \"Sci-Fi\",\n        \"release_year\": 2010,\n        \"duration_minutes\": 148,\n        \"watched\": 1,\n        \"poster_path\": \"https://image.url/inception.jpg\",\n        \"trailer_url\": \"https://youtube.com/watch?v=YoHD9XEInc0\",\n        \"created_at\": \"2026-04-17 22:54:58\",\n        \"updated_at\": \"2026-04-17 22:55:29\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Delete Movie",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"id\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/DB_Ops.php?action=deleteMovie",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "DB_Ops.php"
+          ],
+          "query": [
+            {
+              "key": "action",
+              "value": "deleteMovie"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "success",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/DB_Ops.php?action=deleteMovie",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "DB_Ops.php"
+              ],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "deleteMovie"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 20:55:39 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Content-Length",
+              "value": "71"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"message\": \"Movie deleted\",\n    \"data\": {\n        \"id\": 1\n    }\n}"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    }
+  ]
+}
