@@ -40,6 +40,8 @@ CREATE TABLE `movies` (
   `country` varchar(100) DEFAULT NULL,
   `poster_path` text DEFAULT NULL,
   `trailer_url` text DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
