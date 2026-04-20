@@ -50,6 +50,26 @@
                     >
                 </div>
 
+                <div class="form-group">
+                    <label for="trailer_url">Trailer URL</label>
+                    <input
+                        type="text"
+                        id="trailer_url"
+                        name="trailer_url"
+                        placeholder="https://youtube.com/watch?v=..."
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Rating (1-10)</label>
+                    <input type="number" id="rating" name="rating" min="1" max="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="2" placeholder="Your notes about this film..."></textarea>
+                </div>
+
                 <div class="form-group checkbox-group">
                     <input type="checkbox" id="watched" name="watched" value="1">
                     <label for="watched">I have watched this film</label>
