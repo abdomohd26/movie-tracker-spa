@@ -95,6 +95,8 @@ function addMovie($conn, $input)
     $watched = isset($input['watched']) ? (int)$input['watched'] : 0;
     $poster = normalizeString($input['poster_path'] ?? null);
     $trailer = normalizeString($input['trailer_url'] ?? null);
+    $rating = parseInt($input['rating'] ?? null);
+    $notes = normalizeString($input['notes'] ?? null);
 
     if (!$title) {
         response(false, null, "Title is required", 400);
@@ -110,12 +112,12 @@ function addMovie($conn, $input)
 
     $stmt = $conn->prepare("
         INSERT INTO movies 
-        (title, description, genre, release_year, duration_minutes, poster_path, trailer_url, watched)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        (title, description, genre, release_year, duration_minutes, poster_path, trailer_url, watched, rating, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->bind_param(
-        "sssisssi",
+        "sssiissiis",
         $title,
         $description,
         $genre,
@@ -123,7 +125,9 @@ function addMovie($conn, $input)
         $duration,
         $poster,
         $trailer,
-        $watched
+        $watched,
+        $rating,
+        $notes
     );
 
     if (!$stmt->execute()) {
@@ -186,6 +190,8 @@ function updateMovie($conn, $input)
     $watched = isset($input['watched']) ? (int)$input['watched'] : $existing['watched'];
     $poster = normalizeString($input['poster_path'] ?? $existing['poster_path']);
     $trailer = normalizeString($input['trailer_url'] ?? $existing['trailer_url']);
+    $rating = parseInt($input['rating'] ?? ($existing['rating'] ?? null));
+    $notes = normalizeString($input['notes'] ?? $existing['notes']);
 
     if (!$title) {
         response(false, null, "Title is required", 400);
@@ -193,12 +199,12 @@ function updateMovie($conn, $input)
 
     $stmt = $conn->prepare("
         UPDATE movies SET
-        title=?, description=?, genre=?, release_year=?, duration_minutes=?, poster_path=?, trailer_url=?, watched=?
+        title=?, description=?, genre=?, release_year=?, duration_minutes=?, poster_path=?, trailer_url=?, watched=?, rating=?, notes=?
         WHERE id=?
     ");
 
     $stmt->bind_param(
-        "sssisssii",
+        "sssiissiisi",
         $title,
         $description,
         $genre,
@@ -207,6 +213,8 @@ function updateMovie($conn, $input)
         $poster,
         $trailer,
         $watched,
+        $rating,
+        $notes,
         $id
     );
 
