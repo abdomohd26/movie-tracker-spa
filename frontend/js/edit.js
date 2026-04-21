@@ -3,7 +3,7 @@
  * Handles updating and removing movies from the database
  */
 
-const apiUrl = "../backend/DB_Ops.php";
+const movieApiUrl = "../backend/DB_Ops.php";
 
 /**
  * Escape HTML to prevent XSS vulnerabilities
@@ -31,7 +31,7 @@ function openEditModal(movie) {
   const durationInput = document.getElementById("duration_minutes");
   const genreInput = document.getElementById("genre");
   const descriptionInput = document.getElementById("description");
-  const posterInput = document.getElementById("poster_path");
+  const posterInput = document.getElementById("poster");
   const trailerInput = document.getElementById("trailer_url");
   const ratingInput = document.getElementById("rating");
   const notesInput = document.getElementById("notes");
@@ -44,7 +44,9 @@ function openEditModal(movie) {
   durationInput.value = movie.duration_minutes ?? "";
   genreInput.value = movie.genre ?? "";
   descriptionInput.value = movie.description ?? "";
-  posterInput.value = movie.poster_path ?? "";
+  posterInput.value = "";
+  posterInput.required = false;
+  posterInput.disabled = true;
   trailerInput.value = movie.trailer_url ?? "";
   ratingInput.value = movie.rating ?? "";
   notesInput.value = movie.notes ?? "";
@@ -63,12 +65,12 @@ function openEditModal(movie) {
  */
 async function updateMovie(movieId, payload) {
   try {
-    const response = await fetch(apiUrl, {
-      method: "PUT",
+    const response = await fetch(movieApiUrl, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
-      body: JSON.stringify({ id: movieId, ...payload }),
+      body: JSON.stringify({ _method: "PUT", id: movieId, ...payload }),
     });
 
     const result = await response.json();
@@ -100,12 +102,12 @@ async function deleteMovie(movieId, movieTitle) {
   if (!confirmed) return false;
 
   try {
-    const response = await fetch(apiUrl, {
-      method: "DELETE",
+    const response = await fetch(movieApiUrl, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
-      body: JSON.stringify({ id: movieId }),
+      body: JSON.stringify({ _method: "DELETE", id: movieId }),
     });
 
     const result = await response.json();

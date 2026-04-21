@@ -12,12 +12,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const movieIdInput = document.getElementById("movieId");
   const modalTitle = document.getElementById("modalTitle");
   const saveBtn = document.getElementById("saveBtn");
+  const posterInput = document.getElementById("poster");
 
   const detailPanel = document.getElementById("detailPanel");
   const panelOverlay = document.getElementById("panelOverlay");
   const detailContent = document.getElementById("detailContent");
 
   const apiUrl = "../backend/DB_Ops.php";
+  const allowedPosterTypes = ["image/jpeg", "image/png", "image/webp"];
+  const maxPosterSizeBytes = 2 * 1024 * 1024;
+  const posterPlaceholder =
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 450'><rect width='300' height='450' fill='%23222228'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23a0a0a0' font-family='Arial' font-size='22'>No Poster</text></svg>";
+
+  const getPosterUrl = (posterPath) => {
+    const normalizedPath = String(posterPath ?? "").trim();
+
+    if (!normalizedPath) {
+      return posterPlaceholder;
+    }
+
+    if (/^https?:\/\//i.test(normalizedPath) || normalizedPath.startsWith("data:")) {
+      return normalizedPath;
+    }
+
+    if (normalizedPath.startsWith("../") || normalizedPath.startsWith("./")) {
+      return normalizedPath;
+    }
+
+    return `../${normalizedPath.replace(/^\/+/, "")}`;
+  };
 
   const resetForm = () => {
     movieForm.reset();
@@ -25,7 +48,33 @@ document.addEventListener("DOMContentLoaded", () => {
     currentEditingMovie = null;
     modalTitle.textContent = "Add New Film";
     saveBtn.textContent = "Save Film";
+    posterInput.required = true;
+    posterInput.disabled = false;
   };
+
+  const validatePosterFile = (file) => {
+    if (!file) {
+      return true;
+    }
+
+    if (!allowedPosterTypes.includes(file.type)) {
+      alert("Poster must be a JPG, PNG, or WEBP image.");
+      posterInput.value = "";
+      return false;
+    }
+
+    if (file.size > maxPosterSizeBytes) {
+      alert("Poster image must be 2MB or smaller.");
+      posterInput.value = "";
+      return false;
+    }
+
+    return true;
+  };
+
+  posterInput.addEventListener("change", () => {
+    validatePosterFile(posterInput.files[0] ?? null);
+  });
 
   openBtn.addEventListener("click", () => {
     resetForm();
@@ -76,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         (movie) => `
         <div class="movie-card" data-id="${movie.id}">
             <div class="card-poster">
-                <img src="${movie.poster_path}" alt="${movie.title}">
+                <img src="${getPosterUrl(movie.poster_path)}" alt="${movie.title}">
             </div>
             <div class="card-info">
                 <h3>${movie.title}</h3>
@@ -105,13 +154,16 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const movieId = movieIdInput.value.trim();
+    const posterFile = posterInput.files[0] ?? null;
+    if (!validatePosterFile(posterFile)) {
+      return;
+    }
     const payload = {
       title: document.getElementById("title").value.trim(),
       release_year: parseInt(document.getElementById("release_year").value) || null,
       duration_minutes: parseInt(document.getElementById("duration_minutes").value) || null,
       genre: document.getElementById("genre").value.trim(),
       description: document.getElementById("description").value.trim(),
-      poster_path: document.getElementById("poster_path").value.trim(),
       trailer_url: document.getElementById("trailer_url").value.trim(),
       rating: parseInt(document.getElementById("rating").value) || null,
       notes: document.getElementById("notes").value.trim(),
@@ -128,11 +180,11 @@ document.addEventListener("DOMContentLoaded", () => {
           String(currentEditingMovie.duration_minutes ?? "") === String(payload.duration_minutes ?? "") &&
           String(currentEditingMovie.genre ?? "") === payload.genre &&
           String(currentEditingMovie.description ?? "") === payload.description &&
-          String(currentEditingMovie.poster_path ?? "") === payload.poster_path &&
           String(currentEditingMovie.trailer_url ?? "") === payload.trailer_url &&
           String(currentEditingMovie.rating ?? "") === String(payload.rating ?? "") &&
           String(currentEditingMovie.notes ?? "") === payload.notes &&
-          Number(currentEditingMovie.watched ?? 0) === Number(payload.watched ?? 0);
+          Number(currentEditingMovie.watched ?? 0) === Number(payload.watched ?? 0) &&
+          !posterFile;
 
         if (noChanges) {
           alert("No changes made.");
@@ -143,10 +195,20 @@ document.addEventListener("DOMContentLoaded", () => {
       success = await updateMovie(parseInt(movieId), payload);
     } else {
       try {
+        const formData = new FormData();
+        Object.entries(payload).forEach(([key, value]) => {
+          if (value !== null && value !== "") {
+            formData.append(key, value);
+          }
+        });
+
+        if (posterFile) {
+          formData.append("poster", posterFile);
+        }
+
         const response = await fetch(apiUrl, {
           method: "POST",
-          headers: { "Content-Type": "application/json; charset=UTF-8" },
-          body: JSON.stringify(payload),
+          body: formData,
         });
         const result = await response.json();
         if (result.success) {
@@ -178,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : "";
 
     detailContent.innerHTML = `
-        <img class="detail-poster" src="${movie.poster_path}" />
+        <img class="detail-poster" src="${getPosterUrl(movie.poster_path)}" alt="${movie.title}" />
         <h2>${movie.title}</h2>
         <p class="detail-meta">
         ${movie.release_year} • ${movie.genre || "Unknown"} • 
