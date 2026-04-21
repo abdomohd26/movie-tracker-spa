@@ -1,13 +1,12 @@
 <?php
 require_once "config.php";
+require_once "Upload.php";
 
 header("Content-Type: application/json; charset=UTF-8");
 
-// Hide errors in production
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
-// ===== Read JSON or fallback to POST =====
 $rawInput = file_get_contents("php://input");
 $input = [];
 
@@ -20,9 +19,10 @@ if (!$input) {
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
+$effectiveMethod = strtoupper($input['_method'] ?? $_GET['_method'] ?? $method);
 
 try {
-    switch ($method) {
+    switch ($effectiveMethod) {
         case 'GET':
             getMovies($conn);
             break;
@@ -62,15 +62,24 @@ function response($success, $data = null, $message = null, $code = 200)
 
 function normalizeString($value)
 {
-    if ($value === null) return null;
+    if ($value === null) {
+        return null;
+    }
+
     $value = trim((string)$value);
     return $value === "" ? null : $value;
 }
 
 function parseInt($value)
 {
-    if ($value === null || $value === "") return null;
-    if (!is_numeric($value)) return false;
+    if ($value === null || $value === "") {
+        return null;
+    }
+
+    if (!is_numeric($value)) {
+        return false;
+    }
+
     return (int)$value;
 }
 
@@ -84,7 +93,6 @@ function fetchMovieById($conn, $id)
     return $result->fetch_assoc();
 }
 
-// ===== CREATE =====
 function addMovie($conn, $input)
 {
     $title = normalizeString($input['title'] ?? null);
@@ -93,7 +101,6 @@ function addMovie($conn, $input)
     $releaseYear = parseInt($input['release_year'] ?? null);
     $duration = parseInt($input['duration_minutes'] ?? null);
     $watched = isset($input['watched']) ? (int)$input['watched'] : 0;
-    $poster = normalizeString($input['poster_path'] ?? null);
     $trailer = normalizeString($input['trailer_url'] ?? null);
     $rating = parseInt($input['rating'] ?? null);
     $notes = normalizeString($input['notes'] ?? null);
@@ -110,8 +117,10 @@ function addMovie($conn, $input)
         response(false, null, "duration_minutes must be integer", 400);
     }
 
+    $posterPath = handlePosterUpload("poster");
+
     $stmt = $conn->prepare("
-        INSERT INTO movies 
+        INSERT INTO movies
         (title, description, genre, release_year, duration_minutes, poster_path, trailer_url, watched, rating, notes)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
@@ -123,7 +132,7 @@ function addMovie($conn, $input)
         $genre,
         $releaseYear,
         $duration,
-        $poster,
+        $posterPath,
         $trailer,
         $watched,
         $rating,

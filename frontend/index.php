@@ -41,14 +41,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="poster_path">Poster Image URL</label>
+                    <label for="poster">Poster Image</label>
                     <input
-                        type="text"
-                        id="poster_path"
-                        name="poster_path"
-                        placeholder="https://example.com/image.jpg"
-                    >
-                </div>
+                         type="file"
+                         id="poster"
+                          name="poster"
+                         accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                         ></div>
 
                 <div class="form-group">
                     <label for="trailer_url">Trailer URL</label>
