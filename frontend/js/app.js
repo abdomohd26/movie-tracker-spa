@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentEditingMovie = null;
     modalTitle.textContent = "Add New Film";
     saveBtn.textContent = "Save Film";
-    posterInput.required = true;
+    posterInput.required = false;
     posterInput.disabled = false;
   };
 
@@ -164,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
       duration_minutes: parseInt(document.getElementById("duration_minutes").value) || null,
       genre: document.getElementById("genre").value.trim(),
       description: document.getElementById("description").value.trim(),
+      poster_path: document.getElementById("omdbPosterPath")?.value.trim() || "",
       trailer_url: document.getElementById("trailer_url").value.trim(),
       rating: parseInt(document.getElementById("rating").value) || null,
       notes: document.getElementById("notes").value.trim(),

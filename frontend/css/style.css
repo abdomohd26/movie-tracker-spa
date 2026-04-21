@@ -255,6 +255,79 @@ input[type="text"], input[type="number"], textarea {
     color: var(--text-main);
 }
 
+.omdb-tools {
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.omdb-search-row {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.omdb-search-row input {
+    flex: 1;
+}
+
+.omdb-search-row .btn {
+    flex-shrink: 0;
+}
+
+.omdb-message {
+    min-height: 1.25rem;
+    margin-top: 0.65rem;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.omdb-message.omdb-error {
+    color: #ffb3ba;
+}
+
+.omdb-results {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
+}
+
+.omdb-result {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    text-align: left;
+    cursor: pointer;
+}
+
+.omdb-result:hover {
+    border-color: var(--primary-color);
+}
+
+.omdb-result img {
+    width: 42px;
+    height: 63px;
+    border-radius: 4px;
+    object-fit: cover;
+    background-color: #222;
+}
+
+.omdb-result strong,
+.omdb-result small {
+    display: block;
+}
+
+.omdb-result small {
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+}
+
 .checkbox-group {
     display: flex;
     align-items: center;
@@ -408,6 +481,10 @@ input[type="text"], input[type="number"], textarea {
     }
 
     .detail-actions {
+        flex-direction: column;
+    }
+
+    .omdb-search-row {
         flex-direction: column;
     }
 }

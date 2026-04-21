@@ -118,6 +118,9 @@ function addMovie($conn, $input)
     }
 
     $posterPath = handlePosterUpload("poster");
+    if (!$posterPath) {
+        $posterPath = normalizeString($input['poster_path'] ?? null);
+    }
 
     $stmt = $conn->prepare("
         INSERT INTO movies
