@@ -1,7 +1,0 @@
-# Use this workspace to collaborate
-workspace:
-  id: ""
-
-localResources:
-  collections:
-    - ..\Movie_Tracker.postman_collection.json
