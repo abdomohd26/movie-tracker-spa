@@ -1,6 +1,7 @@
 <?php include 'header.php'; ?>
 
 <div class="movie-grid" id="movieGrid"></div>
+<div class="pagination-bar" id="paginationBar"></div>
 
 <div class="modal-overlay" id="addMovieModal">
     <div class="modal-content">
@@ -47,7 +48,8 @@
                          id="poster"
                           name="poster"
                          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                         ></div>
+                         >
+                </div>
 
                 <div class="form-group">
                     <label for="trailer_url">Trailer URL</label>

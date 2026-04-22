@@ -32,6 +32,7 @@ function openEditModal(movie) {
   const genreInput = document.getElementById("genre");
   const descriptionInput = document.getElementById("description");
   const posterInput = document.getElementById("poster");
+  const omdbPosterInput = document.getElementById("omdbPosterPath");
   const trailerInput = document.getElementById("trailer_url");
   const ratingInput = document.getElementById("rating");
   const notesInput = document.getElementById("notes");
@@ -46,7 +47,10 @@ function openEditModal(movie) {
   descriptionInput.value = movie.description ?? "";
   posterInput.value = "";
   posterInput.required = false;
-  posterInput.disabled = true;
+  posterInput.disabled = false;
+  if (omdbPosterInput) {
+    omdbPosterInput.value = movie.poster_path ?? "";
+  }
   trailerInput.value = movie.trailer_url ?? "";
   ratingInput.value = movie.rating ?? "";
   notesInput.value = movie.notes ?? "";
@@ -56,6 +60,7 @@ function openEditModal(movie) {
   modalTitle.textContent = "Edit Film";
   saveBtn.textContent = "Update Film";
 
+  window.moviePosterUI?.setMovie(movie);
   modal.classList.add("active");
 }
 
@@ -63,14 +68,25 @@ function openEditModal(movie) {
  * Send update request to backend
  * Uses PUT method to update an existing movie
  */
-async function updateMovie(movieId, payload) {
+async function updateMovie(movieId, payload, posterFile = null) {
   try {
+    const formData = new FormData();
+    formData.append("_method", "PUT");
+    formData.append("id", movieId);
+
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== null && value !== "") {
+        formData.append(key, value);
+      }
+    });
+
+    if (posterFile) {
+      formData.append("poster", posterFile);
+    }
+
     const response = await fetch(movieApiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-      body: JSON.stringify({ _method: "PUT", id: movieId, ...payload }),
+      body: formData,
     });
 
     const result = await response.json();

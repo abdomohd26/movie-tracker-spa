@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fillInput("omdbPosterPath", movie.poster_url);
     fillInput("trailer_url", movie.trailer_url);
     fillInput("rating", movie.rating);
+    window.moviePosterUI?.setApiPoster(movie.poster_url || "");
 
     const notesInput = document.getElementById("notes");
     if (notesInput) {
