@@ -1,119 +1,119 @@
-# 🎬 Movie Tracker SPA — Setup Guide
+# 🎬 Movie Tracker — Laravel MVC
 
-This guide will help you run the project locally and test all backend APIs.
+A movie tracking application built with **Laravel 11** following the MVC architectural pattern. Features include full CRUD operations, OMDb API integration, client-side and server-side validation, Blade master layout, and automated tests.
 
 ---
 
 ## 📦 Prerequisites
 
-Make sure you have installed:
-
-* **XAMPP** (or WAMP) — [Watch this setup tutorial](https://www.youtube.com/live/zwFYqyonsOk?si=y-c8mToRUZjQSWMn)
-* **Git**
-* **Postman**
-* **Visual Studio Code**
+- **PHP** >= 8.2
+- **Composer**
+- **MySQL** (via XAMPP or standalone)
+- **Git**
 
 ---
 
-## 🚀 Step 1 — Clone the Repository
+## 🚀 Setup Instructions
 
-Open terminal and run:
+Open a terminal in the project directory and run these commands **in order**:
+
+### 1. Install Dependencies
 
 ```bash
-cd C:\xampp\htdocs
-git clone https://github.com/abdomohd26/movie-tracker-spa
+composer install
 ```
 
-👉 Make sure the project folder is inside:
+### 2. Configure Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 3. Create Database
+
+Create a MySQL database named `movie_tracker` (or update `.env` with your database credentials).
+
+### 4. Run Migrations
+
+```bash
+php artisan migrate
+```
+
+### 5. Start the Development Server
+
+```bash
+php artisan serve
+```
+
+Visit: [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 🧪 Running Tests
+
+```bash
+php artisan test
+```
+
+Tests use an in-memory SQLite database, so no database setup is needed for testing.
+
+---
+
+## 📁 Project Structure
 
 ```
-htdocs/movie-tracker-spa
+app/
+├── Http/Controllers/
+│   ├── Controller.php          # Base controller
+│   ├── MovieController.php     # Movie CRUD with server-side validation
+│   └── OmdbController.php      # OMDb API integration controller
+├── Models/
+│   └── Movie.php               # Movie model with query scopes
+├── Providers/
+│   └── AppServiceProvider.php
+└── Services/
+    └── OmdbService.php         # OMDb API service class
+
+resources/views/
+├── layouts/
+│   └── app.blade.php           # Master Blade layout
+├── partials/
+│   ├── header.blade.php        # Header partial
+│   └── footer.blade.php        # Footer partial
+└── movies/
+    └── index.blade.php         # Main movie page
+
+database/
+├── migrations/                 # Laravel migrations
+├── seeders/
+└── database.sqlite             # SQLite database backup
+
+tests/
+├── Feature/
+│   └── MovieCrudTest.php       # Feature tests (HTTP endpoints)
+└── Unit/
+    └── MovieValidationTest.php # Unit tests (validation rules)
+
+routes/
+├── web.php                     # Web routes (Movie CRUD)
+└── api.php                     # API routes (OMDb integration)
 ```
 
 ---
 
-## 🖥️ Step 2 — Open Project
+## 🔑 Features
 
-* Open **Visual Studio Code**
-* Click **File → Open Folder**
-* Select:
-
-```
-movie-tracker-spa
-```
-
----
-
-## 🟢 Step 3 — Start Server
-
-Open **XAMPP Control Panel** and start:
-
-* ✅ Apache
-* ✅ MySQL
+- **Laravel MVC Architecture** — Models, Controllers, Blade Views
+- **Database Migrations** — Schema defined via Laravel migrations
+- **Server-side Validation** — Laravel validation rules (required, max, min, url, etc.)
+- **Client-side Validation** — JavaScript validation retained from Assignment 1
+- **Master Blade Layout** — `layouts/app.blade.php` with header & footer partials
+- **OMDb API Integration** — Service class with API key stored in `.env`
+- **Automated Tests** — 6 test functions (3 Feature + 3 Unit) using PHPUnit
 
 ---
 
-## 🗄️ Step 4 — Import Database
+## 📩 Team Members
 
-1. Go to:
-
-```
-http://localhost/phpmyadmin
-```
-
-2. Create database:
-
-```
-movie_tracker
-```
-
-3. Import the SQL file (if provided)
-   OR run the schema manually.
-
----
-
-## 📡 Step 5 — Import Postman Collection
-
-1. Open **Postman**
-2. Click **Import**
-3. Select file:
-
-```
-Movie_Tracker.postman_collection.json
-```
-
----
-
-## 🧪 Step 6 — Test API Endpoints
-
-Base URL:
-
-```
-http://localhost/movie-tracker-spa/backend/DB_Ops.php
-```
-
----
-
-### ✅ 1. GET — Get All Movies
-### ✅ 2. POST — Add Movie
-### ✅ 3. PUT — Update Movie
-### ✅ 4. DELETE — Delete Movie
-
-
-
-## ⚠️ Notes
-* There is **success** example in each endpoint
-* All requests use **JSON body**
-
-
-
-## 📩 If you face issues
-
-* Check Apache & MySQL are running
-* Verify correct folder inside `htdocs`
-* Check database name (`movie_tracker`)
-* Confirm Postman headers
-
----
-
-Good luck 🚀
+See `Team_Members.txt` for full team details.
